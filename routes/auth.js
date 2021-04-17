@@ -4,7 +4,8 @@ const { body } = require("express-validator");
 const { signup, login } = require("../controllers/auth");
 const User = require("../models/user");
 
-router.put(
+// POST /auth/signup
+router.post(
   "/signup",
   [
     body("email")
@@ -24,6 +25,7 @@ router.put(
   signup
 );
 
+// POST /auth/login
 router.post("/login", login);
 
 module.exports = router;

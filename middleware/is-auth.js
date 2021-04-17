@@ -8,6 +8,8 @@ module.exports = (req, res, next) => {
     return next(error);
   }
   const token = authHeader.split(" ")[1];
+
+  // Validating the Token
   try {
     decodedToken = jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
@@ -21,6 +23,7 @@ module.exports = (req, res, next) => {
     return next(err);
   }
 
+  // Attaching the userId of loggedIn user to request object
   req.userId = decodedToken.userId;
   next();
 };

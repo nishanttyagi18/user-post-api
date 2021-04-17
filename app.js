@@ -34,11 +34,6 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-app.use(express.json());
-app.use(
-  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
-);
-
 // DB Connection
 mongoose.connect(
   "mongodb://localhost:27017/complete-rest-api",
@@ -61,9 +56,13 @@ db.once("open", () => {
   console.log(chalk.blue("DB Connected"));
 });
 
+// Middleware
+app.use(express.json());
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
+);
 // static serving
 app.use("/images", express.static(path.join(__dirname, "images")));
-
 // Handling CORS
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -72,9 +71,11 @@ app.use((req, res, next) => {
   next();
 });
 
+// Routes
 app.use("/feed", feedRoutes);
 app.use("/auth", authRoutes);
 
+// Error Handling
 app.use((error, req, res, next) => {
   console.log(
     chalk.red(
@@ -93,6 +94,7 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message, data: data });
 });
 
+// Server Listening
 app.listen(8080, () =>
   console.log(chalk.blue("server listening on port 8080"))
 );
